@@ -15,7 +15,7 @@ limited to "step" based sequencing. You could make a whole sample-based DAW. You
 make a cross-platform app to host your SFZ instrument. You could also use it for game sound effects,
 or even to generate a dynamic game soundtrack.
 
-![Drum machine example on Android](https://michaeljperri.com/images/DrumMachineExampleAndroid.png)
+![Drum machine example on Android](https://example.com/images/DrumMachineExampleAndroid.png)
 
 ## How to use
 ### Create the sequence

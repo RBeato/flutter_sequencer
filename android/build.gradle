@@ -8,15 +8,15 @@ group = "com.example.flutter_sequencer"
 version = "1.0-SNAPSHOT"
 
 buildscript {
-    ext.kotlin_version = '1.8.21'
+    ext.kotlin_version = '1.9.22'
     repositories {
         google()
         mavenCentral()
     }
 
     dependencies {
-        classpath("com.android.tools.build:gradle:7.3.0")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
+        classpath 'com.android.tools.build:gradle:8.4.0'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath 'org.eclipse.jgit:org.eclipse.jgit:6.3.0.202209071007-r'
     }
 }
@@ -57,9 +57,12 @@ android {
     }
 
     dependencies {
-        testImplementation("org.jetbrains.kotlin:kotlin-test")
-        testImplementation("org.mockito:mockito-core:5.0.0")
-    }
+        implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version" // Ensure using the latest Kotlin stdlib
+        implementation 'androidx.core:core-ktx:1.9.0' // Updated dependency
+        implementation 'androidx.appcompat:appcompat:1.6.1' // Updated dependency
+        testImplementation "org.jetbrains.kotlin:kotlin-test:1.9.22" // Ensure using the latest Kotlin test library
+        testImplementation "org.mockito:mockito-core:5.0.0" // Updated dependency
+    }   
 
     testOptions {
         unitTests.all {
