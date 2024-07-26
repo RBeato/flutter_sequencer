@@ -1,0 +1,107 @@
+import org.eclipse.jgit.api.Git
+import org.eclipse.jgit.api.errors.GitAPIException
+import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider
+import org.eclipse.jgit.lib.TextProgressMonitor
+import org.eclipse.jgit.lib.Ref
+
+group = "com.example.flutter_sequencer"
+version = "1.0-SNAPSHOT"
+
+buildscript {
+    ext.kotlin_version = '1.8.21'
+    repositories {
+        google()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath("com.android.tools.build:gradle:7.3.0")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
+        classpath 'org.eclipse.jgit:org.eclipse.jgit:6.3.0.202209071007-r'
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+apply plugin: "com.android.library"
+apply plugin: "kotlin-android"
+
+android {
+    if (project.android.hasProperty("namespace")) {
+        namespace = "com.example.flutter_sequencer"
+    }
+
+    compileSdk = 34
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+
+    sourceSets {
+        main.java.srcDirs += "src/main/kotlin"
+        test.java.srcDirs += "src/test/kotlin"
+    }
+
+    defaultConfig {
+        minSdk = 21
+    }
+
+    dependencies {
+        testImplementation("org.jetbrains.kotlin:kotlin-test")
+        testImplementation("org.mockito:mockito-core:5.0.0")
+    }
+
+    testOptions {
+        unitTests.all {
+            useJUnitPlatform()
+
+            testLogging {
+               events "passed", "skipped", "failed", "standardOut", "standardError"
+               outputs.upToDateWhen {false}
+               showStandardStreams = true
+            }
+        }
+    }
+}
+
+void cloneThirdPartyRepo(String name, String uri, String commit) {
+    def dirPath = "$projectDir/third_party/$name"
+    def dir = new File(dirPath)
+
+   if (!dir.exists()) {
+        dir.mkdirs()
+        try {
+           def repo = Git.cloneRepository()
+                    .setDirectory(dir)
+                    .setURI(uri)
+                    .setRemote('origin')
+                    .setCloneSubmodules(true)
+                    .setProgressMonitor(new TextProgressMonitor())
+                    .call()
+
+            repo.checkout().setName(commit).call()
+            repo.submoduleUpdate().call()
+            repo.submoduleInit().call()
+        } catch (GitAPIException e) {
+            throw new GradleException("Failed to clone repository: $uri", e)
+        }
+    }
+}
+
+task cloneThirdPartyRepos {
+    cloneThirdPartyRepo('oboe', 'https://github.com/google/oboe', '06ec23e4f6bc00ba7eea9b84e299f9200a598838')
+    cloneThirdPartyRepo('TinySoundFont', 'https://github.com/schellingb/TinySoundFont.git', 'bf574519e601202c3a9d27a74f345921277eed39')
+    cloneThirdPartyRepo('sfizz', 'https://github.com/sfztools/sfizz.git', 'fc1f0451cebd8996992cbc4f983fcf76b03295c5')
+}
+
+preBuild.dependsOn cloneThirdPartyRepos

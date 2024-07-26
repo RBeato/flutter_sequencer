@@ -1,0 +1,41 @@
+name: flutter_sequencer
+description: "A new Flutter plugin project."
+version: 0.0.1
+homepage:
+
+environment:
+  sdk: ">=3.4.3 <4.0.0"
+  flutter: ">=3.3.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_web_plugins:
+    sdk: flutter
+  web: ^0.5.1
+  plugin_platform_interface: ^2.0.2
+  ffi: ^2.1.2
+  path: ^1.9.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  plugin:
+    platforms:
+      android:
+        package: com.example.flutter_sequencer
+        pluginClass: FlutterSequencerPlugin
+      ios:
+        pluginClass: FlutterSequencerPlugin
+      linux:
+        pluginClass: FlutterSequencerPlugin
+      macos:
+        pluginClass: FlutterSequencerPlugin
+      windows:
+        pluginClass: FlutterSequencerPluginCApi
+      web:
+        pluginClass: FlutterSequencerWeb
+        fileName: flutter_sequencer_web.dart
